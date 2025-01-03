@@ -1,14 +1,11 @@
 package com.eduardocampos.appgorjeta
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.eduardocampos.appgorjeta.databinding.ActivityMainBinding
-import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.snackbar.Snackbar
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,21 +21,21 @@ class MainActivity : AppCompatActivity() {
 
         binding.rbOptionOne.setOnCheckedChangeListener { _, isChecked ->
             println("Edu1 Botao 1:$isChecked")
-            if (isChecked){
+            if (isChecked) {
                 percentage = 10
             }
         }
 
         binding.rbOptionTwo.setOnCheckedChangeListener { _, isChecked ->
             println("Edu1 Botao 2:$isChecked")
-            if (isChecked){
+            if (isChecked) {
                 percentage = 15
             }
         }
 
         binding.rbOptionThree.setOnCheckedChangeListener { _, isChecked ->
             println("Edu1 Botao 3:$isChecked")
-            if (isChecked){
+            if (isChecked) {
                 percentage = 20
             }
         }
@@ -48,13 +45,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnDone.setOnClickListener {
-            val totalAmount: Float = binding.tieTotal.text.toString().toFloat()
-            val nPeople: Int = binding.tieNumPeople.text.toString().toInt()
+            val totalAmount = binding.tieTotal.text
+            val nPeople = binding.tieNumPeople.text
 
+            if (totalAmount?.isEmpty() == true || nPeople?.isEmpty() == true){
+                Snackbar
+                    .make(binding.tieTotal, "Preencha todos os Campos", Snackbar.LENGTH_LONG)
+                    .show()
+            } else {
+                val totalAmount: Float = binding.tieTotal.text.toString().toFloat()
+                val nPeople: Int = binding.tieNumPeople.text.toString().toInt()
 
-            val totalWithTips = totalAmount + ((totalAmount*percentage)/100)
+                val totalWithTips = totalAmount + ((totalAmount * percentage) / 100)
+                val totalPerClient = totalWithTips / nPeople
+                binding.tvResult.text = "Total with  tips per client: $totalPerClient"
+            }
+        }
 
-            println("Edu1 O total é: $totalWithTips")
+        binding.btnClean.setOnClickListener {
+            binding.tvResult.text = ""
+            binding.tieTotal.setText("")
+            binding.tieNumPeople.setText("")
+            binding.rbOptionOne.isChecked = false
+            binding.rbOptionTwo.isChecked = false
+            binding.rbOptionThree.isChecked = false
         }
 
     }
